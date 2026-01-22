@@ -26,5 +26,26 @@ func TestHelloHandler(t *testing.T) {
 	if body != expectedBody {
 		t.Fatalf("expected body %q, got %q", expectedBody, body)
 	}
+}
 
+func TestPingoHandler(t *testing.T) {
+	req := httptest.NewRequest(http.MethodGet, "/ping", nil)
+	rec := httptest.NewRecorder()
+
+	handler := middleware(ping)
+	handler.ServeHTTP(rec, req)
+
+	resp := rec.Result()
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		t.Fatalf("expected status 200, got %d", resp.StatusCode)
+	}
+
+	expectedBody := `{"message": "Pong"}`
+	body := rec.Body.String()
+
+	if body != expectedBody {
+		t.Fatalf("expected body %q, got %q", expectedBody, body)
+	}
 }

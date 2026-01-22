@@ -11,6 +11,7 @@ func main() {
 	logger := log.New(os.Stdout, "server:", log.Lshortfile)
 
 	http.HandleFunc("/hello", middleware(hello))
+	http.HandleFunc("/ping", middleware(ping))
 	server := &http.Server{Addr: ":8080"}
 
 	logger.Println("Server is running on :8080")
@@ -22,6 +23,11 @@ func main() {
 func hello(w http.ResponseWriter, r *http.Request) {
 	resp := []byte(`{"message": "Hello World"}`)
 
+	w.Write(resp)
+}
+
+func ping(w http.ResponseWriter, r *http.Request) {
+	resp := []byte(`{"message": "Pong"}`)
 	w.Write(resp)
 }
 
