@@ -48,6 +48,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           source: "app"
           target: "/home/${{ secrets.SSH_USER }}/app"
+        run: echo "connected to server"
 
       - name: Run on server
         uses: appleboy/ssh-action@v1.0.3
