@@ -48,6 +48,8 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           source: "app"
           target: "/home/${{ secrets.SSH_USER }}/app"
+
+      - name: Connected message
         run: echo "connected to server"
 
       - name: Run on server
