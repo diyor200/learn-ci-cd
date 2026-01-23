@@ -65,7 +65,7 @@ jobs:
             docker rm myapp || true
             docker run -d \
               --name myapp \
-              -p 80:8080
+              -p 80:8080 \
               --restart unless-stopped \
               ${{ secrets.DOCKER_USERNAME }}/myapp:latest
 
