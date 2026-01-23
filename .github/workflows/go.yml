@@ -49,30 +49,51 @@ jobs:
             ${{ secrets.DOCKER_USERNAME}}/myapp:${{ github.sha}}
 
   deploy:
-    needs: build
+    needs: docker
     runs-on: ubuntu-latest
+
     steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: binary-payload
-
-      - name: Copy binary to server
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          source: "myapp"
-          target: "~/" # Uploads directly to home dir
-
-      - name: Run on server
+      - name: Deploy container on server
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            pkill myapp || true
-            chmod +x ~/myapp
-            nohup ~/myapp > app.log 2>&1 &
+            docker pull ${{ secrets.DOCKER_USERNAME }}/myapp:latest
+            docker stop myapp || true
+            docker rm myapp || true
+            docker run -d \
+              --name myapp \
+              -p 80:8080
+              --restart unless-stopped \
+              ${{ secrets.DOCKER_USERNAME }}/myapp:latest
+
+#  deploy:
+#    needs: build
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Download artifact
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: binary-payload
+#
+#      - name: Copy binary to server
+#        uses: appleboy/scp-action@v0.1.7
+#        with:
+#          host: ${{ secrets.SSH_HOST }}
+#          username: ${{ secrets.SSH_USER }}
+#          key: ${{ secrets.SSH_KEY }}
+#          source: "myapp"
+#          target: "~/" # Uploads directly to home dir
+#
+#      - name: Run on server
+#        uses: appleboy/ssh-action@v1.0.3
+#        with:
+#          host: ${{ secrets.SSH_HOST }}
+#          username: ${{ secrets.SSH_USER }}
+#          key: ${{ secrets.SSH_KEY }}
+#          script: |
+#            pkill myapp || true
+#            chmod +x ~/myapp
+#            nohup ~/myapp > app.log 2>&1 &
