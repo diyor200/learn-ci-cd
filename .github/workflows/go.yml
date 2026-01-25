@@ -62,7 +62,7 @@ jobs:
           script: |
             docker pull ${{ secrets.DOCKER_USERNAME }}/myapp:latest
             cd myapp
-            docker compose up -d
+            docker-compose up -d
 
 #  deploy:
 #    needs: build
