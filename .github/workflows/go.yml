@@ -61,6 +61,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             docker pull ${{ secrets.DOCKER_USERNAME }}/myapp:latest
+            cd myapp
             docker compose up -d
 
 #  deploy:

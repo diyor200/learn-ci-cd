@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   app:
-    image: diyorbek2001/myapp
+    image: diyorbek2001/myapp:latest
     container_name: myapp
     restart: unless-stopped
     ports:
