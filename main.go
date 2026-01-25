@@ -4,7 +4,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 )
 
 func main() {
@@ -12,31 +11,12 @@ func main() {
 
 	http.HandleFunc("/hello", middleware(hello))
 	http.HandleFunc("/ping", middleware(ping))
+	http.HandleFunc("/health", middleware(health))
+
 	server := &http.Server{Addr: ":8080"}
 
 	logger.Println("Server is running on :8080")
 	if err := server.ListenAndServe(); err != nil {
 		panic(err)
 	}
-}
-
-func hello(w http.ResponseWriter, r *http.Request) {
-	resp := []byte(`{"message": "Hello World"}`)
-
-	w.Write(resp)
-}
-
-func ping(w http.ResponseWriter, r *http.Request) {
-	resp := []byte(`{"message": "Pong"}`)
-	w.Write(resp)
-}
-
-func middleware(next http.HandlerFunc) http.HandlerFunc {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		now := time.Now()
-
-		next.ServeHTTP(w, r)
-
-		log.Println(r.Method, r.URL.String(), time.Since(now), r.RemoteAddr)
-	})
 }

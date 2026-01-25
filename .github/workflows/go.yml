@@ -61,13 +61,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             docker pull ${{ secrets.DOCKER_USERNAME }}/myapp:latest
-            docker stop myapp || true
-            docker rm myapp || true
-            docker run -d \
-              --name myapp \
-              -p 80:8080 \
-              --restart unless-stopped \
-              ${{ secrets.DOCKER_USERNAME }}/myapp:latest
+            docker compose up -d
 
 #  deploy:
 #    needs: build
