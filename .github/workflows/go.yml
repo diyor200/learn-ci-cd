@@ -26,7 +26,7 @@ jobs:
       - name: Inspet values inside producer
         run: |
           echo "FOO (set via github env): $FOO"
-          echo "foo (step output): ${{ steps.generate-foo.outputs.foo }}
+          echo "foo (step output): ${{ steps.generate-foo.outputs.foo }}"
 
   consumer:
     runs-on: ubuntu-22.04
