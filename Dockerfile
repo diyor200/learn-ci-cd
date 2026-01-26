@@ -1,11 +1,14 @@
 FROM golang:1.22-alpine AS builder
-
 WORKDIR /app
 
-COPY go.mod ./
-RUN go mod download
+# Enable build kit cache mounts for faster re-builds
+COPY go.mod go.sum ./
+RUN --mount=type=cache,target=/go/pkg/mod \
+    go mod download
+
 COPY . .
-RUN GOOS=linux CGO_ENABLED=0 go build -o app .
+RUN --mount=type=cache,target=/root/.cache/go-build \
+    GOOS=linux CGO_ENABLED=0 go build -o myapp .
 
 
 FROM alpine:3.19
