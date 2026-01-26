@@ -36,4 +36,4 @@ jobs:
       - name: Get variables
         run: |
           echo "Values from producer:   ${{ needs.producer.outputs.foo }}"
-          echp "FOO in consumer:        ${FOO:-UNSET}"
+          echo "FOO in consumer:        ${FOO:-UNSET}"
