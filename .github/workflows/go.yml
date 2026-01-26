@@ -18,7 +18,7 @@ jobs:
         run: |
           foo=bar
           # 1: for output job
-          echo "foo=${foo} >> "$GITHUB_OUTPUT"
+          echo "foo=${foo}" >> "$GITHUB_OUTPUT"
           
           # 2: job scoped environment variable
           echo "FOO=${foo}" >> "$GITHUB_ENV"
@@ -35,5 +35,5 @@ jobs:
     steps:
       - name: Get variables
         run: |
-          echo "Values from producer:   ${{ needs.producer.outputs.foo }}
+          echo "Values from producer:   ${{ needs.producer.outputs.foo }}"
           echp "FOO in consumer:        ${FOO:-UNSET}"
