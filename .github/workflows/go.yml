@@ -5,6 +5,9 @@ on:
     branches:
       - 'core-features'
 
+env:
+  - USER_ID: 1
+
 jobs:
   producer:
     runs-on: ubuntu-22.04
@@ -27,6 +30,7 @@ jobs:
         run: |
           echo "FOO (set via github env): $FOO"
           echo "foo (step output): ${{ steps.generate-foo.outputs.foo }}"
+          echo "foo (global env): ${{ env.USER_ID }}
 
   consumer:
     runs-on: ubuntu-22.04
