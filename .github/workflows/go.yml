@@ -1,43 +1,38 @@
-name: 'core-features'
+name: Learn artifact
 
 on:
   push:
     branches:
-      - 'core-features'
-
-env:
-  - USER_ID: 1
+      - artifact
 
 jobs:
-  producer:
+  upload:
     runs-on: ubuntu-22.04
-
-    outputs:
-      foo: ${{ steps.generate-foo.outputs.foo }}
-    steps:
-      - name: Generate and export foo
-        id: generate-foo
-
-        run: |
-          foo=bar
-          # 1: for output job
-          echo "foo=${foo}" >> "$GITHUB_OUTPUT"
-          
-          # 2: job scoped environment variable
-          echo "FOO=${foo}" >> "$GITHUB_ENV"
-
-      - name: Inspet values inside producer
-        run: |
-          echo "FOO (set via github env): $FOO"
-          echo "foo (step output): ${{ steps.generate-foo.outputs.foo }}"
-          echo "foo (global env): ${{ env.USER_ID }}
-
-  consumer:
-    runs-on: ubuntu-22.04
-    needs: producer
+    name: Upload artifact
 
     steps:
-      - name: Get variables
+      - name: Create source file to upload
         run: |
-          echo "Values from producer:   ${{ needs.producer.outputs.foo }}"
-          echo "FOO in consumer:        ${FOO:-UNSET}"
+          echo "This text will be in artifact file" > artifact.txt
+          echo "Generated on $(date)" >> artifact.txt
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: example-artifact
+          path: artifact.txt
+
+  download:
+    runs-on: ubuntu-22.04
+    name: Download artifact
+    needs: upload
+
+    steps:
+      - name: Download artifact file
+        uses: actions/download-artifact@v4
+        with:
+          name: example-artifact
+
+      - name: View file
+        run: cat artifact.txt
+
